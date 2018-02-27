@@ -4,6 +4,13 @@ const { ipcRenderer, shell } = require('electron')
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
+var moment = require('moment');
+moment().format();
+
+var date = require('date');
+
+var currentDate = new Date();
+
 const snoowrap = require('snoowrap');
 
 const a1 = new snoowrap({
@@ -16,23 +23,24 @@ const a1 = new snoowrap({
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  let promise1 = a1.getInbox()[0].body;
+  let messageAuthor = a1.getInbox()[1].author.name;
+  let messageSubreddit = a1.getInbox()[1].subreddit.display_name;
+  let messageBody = a1.getInbox()[1].body;
+  let messageTimeAgo = a1.getInbox()[1].created;
 
 
-
-  promise1.then(returnValue => console.log(returnValue));
-
-  document.querySelector('.list-group').innerHTML += `
+  Promise.all([messageAuthor, messageSubreddit, messageBody,messageTimeAgo]).then(
+    returnValue => document.querySelector('.list-group').innerHTML += `
   <li class="list-group-item">
     <div class="media-body">
-      <span>${a1.getInbox()[0].body} replied to your post in ${a1.getInbox()[0].body}</span>
-      <p>${promise1}</p>
-      <span><a href="${a1.getInbox()[0].author}"> Post Reply </a>&nbsp;• ${a1.getInbox()[0].created} ago</span>
+      <span>${returnValue[0]} replied to your post in ${returnValue[1]}</span>
+      <p>${returnValue[2]}</p>
+      <span>${moment(returnValue[3]).from(currentDate.getDate())}</span>
     </div>
   </li>
-  `;
+  `)
 
-})
+});
 
 document.addEventListener('click', (event) => {
 
@@ -53,7 +61,7 @@ const updateView = (notifications) => {
 }
 
 const updateNotifications = () => {
-
+  
 }
 
 // Refresh notifications
