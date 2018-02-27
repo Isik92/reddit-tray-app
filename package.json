@@ -1,0 +1,19 @@
+{
+  "name": "reddit-tray-app",
+  "version": "0.0.1",
+  "description": "A simple Electron app to display reddit notifications ",
+  "license": "MIT",
+  "repository": "github.com/Isik92/reddit-tray-app",
+  "devDependencies": {
+    "electron-packager": "^8.0.0"
+  },
+  "dependencies": {
+    "electron": "^1.8.2",
+    "snoowrap": "^1.15.2"
+  },
+  "main": "main.js",
+  "scripts": {
+    "build-osx": "electron-packager . reddit-tray-app --platform=darwin --arch=x64 --version=0.36.0 --icon=Icon.icns",
+    "start": "electron ."
+  }
+}
