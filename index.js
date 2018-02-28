@@ -12,20 +12,40 @@ var currentDate = new Date();
 
 const snoowrap = require('snoowrap');
 
-let userAccount = new snoowrap({
-  userAgent: 'Test App',
-  clientId: '03Cpdo9YCmkKIw',
-  clientSecret: '2VTCIOUrL2UbxtMisbGbAq32xS8',
-  username: 'nero-92',
-  password: 'Eded#2410'
-});
+const Store = require('electron-store');
+const store = new Store();
+
+let userAccount;
+
+if (
+  store.get('useragent') && 
+  store.get('clientid') &&
+  store.get('clientsecret') &&
+  store.get('username') &&
+  store.get('password')) {
+
+    userAccount = new snoowrap({
+      userAgent: store.get('useragent'),
+      clientId: store.get('clientid'),
+      clientSecret: store.get('clientsecret'),
+      username: store.get('username'),
+      password: store.get('password')
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
 
   function loadMessages() {
 
+    myConsole.log(store.get('useragent'));
+    myConsole.log(store.get('clientid'));
+    myConsole.log(store.get('clientsecret'));
+    myConsole.log(store.get('username'));
+    myConsole.log(store.get('password'));
 
+
+    if (userAccount) {
     userAccount.getInbox().then(inboxArray => {
 
 
@@ -53,9 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
           `})
       })
     }
+    
 
     )
-
+  }
     document.querySelector('.footer-content').innerHTML = `Updated ${moment().format('MMMM Do YYYY, h:mm:ss a')}`;
 
   };
@@ -101,10 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector("#clientid").value != '' &&
       document.querySelector("#clientsecret").value != '' &&
       document.querySelector("#username").value != '' &&
-      document.querySelector("#password").value != '') 
-      {
+      document.querySelector("#password").value != '') {
+
+      store.set('useragent', document.querySelector("#useragent").value);
+      store.set('clientid', document.querySelector("#clientid").value);
+      store.set('clientsecret', document.querySelector("#clientsecret").value);
+      store.set('username', document.querySelector("#username").value);
+      store.set('password', document.querySelector("#password").value);
+
       myConsole.log("Values set");
-      document.querySelector("#info").innerHTML = ''; 
+      document.querySelector("#info").innerHTML = '';
       userAccount = new snoowrap({
         userAgent: document.querySelector("#useragent").value,
         clientId: document.querySelector("#clientid").value,
@@ -115,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
       updateNotifications();
     } else {
       myConsole.log("One or more values empty");
-      document.querySelector("#info").innerHTML = 'Input fields cant be empty'; 
+      document.querySelector("#info").innerHTML = 'Input fields cant be empty';
     }
   });
 
