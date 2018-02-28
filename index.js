@@ -167,5 +167,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Refresh notifications
-  setInterval(() => updateNotifications(), 1 * 5 * 1000);
+  setInterval(() => updateNotifications(), 2 * 60 * 1000);
 });
