@@ -11,8 +11,8 @@ const snoowrap = require('snoowrap');
 const Store = require('electron-store');
 const store = new Store();
 
-var notifications = [];
-
+var notifications = '';
+var newNotifications = '';
 let userAccount;
 
 
@@ -39,23 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function loadMessages() {
 
-    myConsole.log(store.get('useragent'));
-    myConsole.log(store.get('clientid'));
-    myConsole.log(store.get('clientsecret'));
-    myConsole.log(store.get('username'));
-    myConsole.log(store.get('password'));
-
-
     if (userAccount) {
 
       userAccount.getInbox().then(inboxArray => {
 
-
-
-
         currentDate = new Date();
 
         inboxArray.forEach(function (element) {
+
+          newNotifications += element.id;
 
           var messageAuthor;
 
@@ -74,8 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
               messageSource = `<a href="https://www.reddit.com/r/${messageSource}">/r/${messageSource}</a>`;
             }
 
-        
-
             document.querySelector('.list-group').innerHTML += `
           <li class="list-group-item">
             <div class="media-body">
@@ -89,7 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       }
       )
+
+      myConsole.log('old: ' + notifications);
+      myConsole.log('new: ' + newNotifications);
+
+      if (notifications == newNotifications || notifications == '') {
+        myConsole.log('No new Messages');
+        notifications = newNotifications;
+      } else {
+        myConsole.log('New Message!!!');
+        notifications = newNotifications;
+
+        let myNotification = new Notification('Reddit Notification', {
+          body: 'You received a new Message or Reply'
+        })
+      }
+
     }
+    newNotifications = '';
     document.querySelector('.footer-content').innerHTML = `Updated ${moment().format('MMMM Do YYYY, h:mm:ss a')}`;
 
   };
@@ -113,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const updateNotifications = () => {
-    myConsole.log(notifications);
+
     document.querySelector('.list-group').innerHTML = ``;
     loadMessages();
   }
@@ -160,5 +167,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // Refresh notifications
-  setInterval(() => updateNotifications(), 5 * 60 * 1000);
+  setInterval(() => updateNotifications(), 1 * 5 * 1000);
 });
