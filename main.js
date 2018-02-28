@@ -37,6 +37,7 @@ app.on('ready', () => {
   })
 
 
+
   // Tell the popup window to load our index.html file
   window.loadURL(`file://${path.join(__dirname, 'index.html')}`)
 

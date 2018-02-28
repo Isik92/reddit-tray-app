@@ -12,6 +12,7 @@
 <body>
   <div class="header-arrow"></div>
   <div class="window">
+
     <header class="toolbar toolbar-header">
       <h1 class="title"> Reddit Tray App
         <span class="js-update-time"></span>
@@ -21,11 +22,38 @@
     <div class="window-content">
       <div class="pane">
 
-        <ul class="list-group">
+        <div id="login-overlay">
+          userAgent
+          <br>
+          <input id="useragent" type="text" name="useragent">
 
-        </ul>
+          <br> clientId:
+          <br>
+          <input id="clientid" type="text" name="clientid">
 
+          <br> clientSecret:
+          <br>
+          <input id="clientsecret" type="text" name="clientsecret">
 
+          <br> username:
+          <br>
+          <input id="username" type="text" name="username">
+
+          <br> password:
+          <br>
+          <input id="password" type="text" name="password">
+          <br>
+          <br>
+          <span id="info"></span>
+          <br>
+          <br>
+          <input id="submitButton" type="submit" value="Save">
+          <br>
+          <p>Go to <a href="https://www.reddit.com/prefs/apps/">https://www.reddit.com/prefs/apps/</a> and then click on 'are you a developer? create an app...'. Choose a name for the application and click 'script app'. Use 'https://www.reddit.com/' as the redirect URL. The key under 'personal use script' is your clientID. Copy the secret key and use your normal username and password. Click Save.</p>
+
+        </div>
+
+        <ul class="list-group"></ul>
 
       </div>
     </div>
@@ -33,14 +61,18 @@
     <footer class="toolbar toolbar-footer">
 
       <div class="footer-content">
-        Updated Today, 04:30 PM
+        loading time...
       </div>
 
       <div class="toolbar-actions pull-right">
         <div class="btn-group">
 
           <button class="btn btn-default js-refresh-action">
-            <span class="icon icon-pencil js-refresh-action" title="Refresh"></span>
+            <span class="icon icon-arrows-ccw js-refresh-action" title="Refresh"></span>
+          </button>
+
+          <button class="btn btn-default js-settings-action">
+            <span class="icon icon-cog js-settings-action" title="Settings"></span>
           </button>
 
         </div>
