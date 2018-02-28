@@ -79,9 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.list-group').innerHTML += `
           <li class="list-group-item">
             <div class="media-body">
-              <span>${messageAuthor} in ${messageSource}</span>
+              <span>${messageAuthor} in ${messageSource}</span><br>
+              <b>${element.subject}</b>
               <p>${element.body_html}</p>
-              <span>${moment.unix(element.created_utc).fromNow()}</span>
+              <i>${moment.unix(element.created_utc).fromNow()}</i>
             </div>
           </li>
           `})
