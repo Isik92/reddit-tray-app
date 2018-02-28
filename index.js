@@ -1,11 +1,10 @@
 'use strict';
 
-const { ipcRenderer, shell } = require('electron')
+const { ipcRenderer, shell } = require('electron');
 var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
 var moment = require('moment');
-moment().format();
 
 var date = require('date');
 
@@ -23,48 +22,58 @@ const a1 = new snoowrap({
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  let messageAuthor = a1.getInbox()[1].author.name;
-  let messageSubreddit = a1.getInbox()[1].subreddit.display_name;
-  let messageBody = a1.getInbox()[1].body;
-  let messageTimeAgo = a1.getInbox()[1].created;
+
+  function loadMessages() {
 
 
-  Promise.all([messageAuthor, messageSubreddit, messageBody,messageTimeAgo]).then(
-    returnValue => document.querySelector('.list-group').innerHTML += `
-  <li class="list-group-item">
-    <div class="media-body">
-      <span>${returnValue[0]} replied to your post in ${returnValue[1]}</span>
-      <p>${returnValue[2]}</p>
-      <span>${moment(returnValue[3]).from(currentDate.getDate())}</span>
-    </div>
-  </li>
-  `)
+  a1.getInbox().then(inboxArray => {
 
-});
+    currentDate = new Date();
 
-document.addEventListener('click', (event) => {
+    inboxArray.forEach(function (element) {
 
-  if (event.target.href) {
-    // Open links in external browser
-    shell.openExternal(event.target.href)
-    event.preventDefault()
-  } else if (event.target.classList.contains('js-refresh-action')) {
-    updateNotifications()
-  } else if (event.target.classList.contains('js-quit-action')) {
-    window.close()
+      Promise.all([element.author.name, element.subreddit ? element.subreddit.display_name : "No display name", element.body, element.created_utc]).then(returnValue => 
+        
+        document.querySelector('.list-group').innerHTML += `
+          <li class="list-group-item">
+            <div class="media-body">
+              <span><a href="https://www.reddit.com/user/${element.author.name}">u/${element.author.name}</a> replied to your post in ${element.subreddit ? element.subreddit.display_name : "Private Messages"}</span>
+              <p>${element.body}</p>
+              <span>${moment.unix(element.created_utc).fromNow()}</span>
+            </div>
+          </li>
+          `)
+    })
   }
 
-})
+)
 
-const updateView = (notifications) => {
-  myConsole.log(notifications);
-}
+document.querySelector('.footer-content').innerHTML = `Updated ${currentDate.getDay()}/${currentDate.getMonth()}/${currentDate.getFullYear()}, 
+${currentDate.getHours()}:${currentDate.getMinutes().toFixed()}`;
+};
 
-const updateNotifications = () => {
-  
-}
+loadMessages();
 
-// Refresh notifications
-const tenMinutes = 10 * 60 * 1000
-setInterval(updateNotifications, tenMinutes);
+  document.addEventListener('click', (event) => {
 
+    if (event.target.href) {
+      // Open links in external browser
+      shell.openExternal(event.target.href)
+      event.preventDefault()
+    } else if (event.target.classList.contains('js-refresh-action')) {
+      updateNotifications()
+    } else if (event.target.classList.contains('js-quit-action')) {
+      window.close()
+    }
+
+  });
+
+  const updateNotifications = () => {
+    document.querySelector('.list-group').innerHTML = ``;
+    loadMessages();
+  }
+
+  // Refresh notifications
+  const tenMinutes = 10 * 60 * 1000
+  setInterval(updateNotifications, tenMinutes);
+});
