@@ -5,36 +5,37 @@ var nodeConsole = require('console');
 var myConsole = new nodeConsole.Console(process.stdout, process.stderr);
 
 var moment = require('moment');
-
 var date = require('date');
-
 var currentDate = new Date();
-
 const snoowrap = require('snoowrap');
-
 const Store = require('electron-store');
 const store = new Store();
 
+var notifications = [];
+
 let userAccount;
 
+
 if (
-  store.get('useragent') && 
+  store.get('useragent') &&
   store.get('clientid') &&
   store.get('clientsecret') &&
   store.get('username') &&
   store.get('password')) {
 
-    userAccount = new snoowrap({
-      userAgent: store.get('useragent'),
-      clientId: store.get('clientid'),
-      clientSecret: store.get('clientsecret'),
-      username: store.get('username'),
-      password: store.get('password')
-    });
+  userAccount = new snoowrap({
+    userAgent: store.get('useragent'),
+    clientId: store.get('clientid'),
+    clientSecret: store.get('clientsecret'),
+    username: store.get('username'),
+    password: store.get('password')
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
+
+  document.querySelector('#login-overlay').style.display = 'none';
 
   function loadMessages() {
 
@@ -46,37 +47,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     if (userAccount) {
-    userAccount.getInbox().then(inboxArray => {
+
+      userAccount.getInbox().then(inboxArray => {
 
 
 
-      currentDate = new Date();
 
-      inboxArray.forEach(function (element) {
-        Promise.all([element.author.name, element.subreddit ? element.subreddit.display_name : "No display name", element.body, element.created_utc]).then(returnValue => {
-          var messageSource = element.subreddit ? element.subreddit.display_name : "PMs";
-          var messageSourceLink;
+        currentDate = new Date();
 
-          if (messageSource != 'PMs') {
-            messageSource = `<a href="https://www.reddit.com/r/${messageSource}">/r/${messageSource}</a>`;
+        inboxArray.forEach(function (element) {
+
+          var messageAuthor;
+
+          if (element.author) {
+            messageAuthor = `<a href="https://www.reddit.com/user/${element.author.name}">u/${element.author.name}</a>`
+          } else {
+            messageAuthor = 'Subreddit Mod';
           }
 
+          Promise.all([messageAuthor, element.subreddit ? element.subreddit.display_name : "No display name", element.body_html, element.created_utc]).then(returnValue => {
 
-          document.querySelector('.list-group').innerHTML += `
+            var messageSource = element.subreddit ? element.subreddit.display_name : "PMs";
+            var messageSourceLink;
+
+            if (messageSource != 'PMs') {
+              messageSource = `<a href="https://www.reddit.com/r/${messageSource}">/r/${messageSource}</a>`;
+            }
+
+        
+
+            document.querySelector('.list-group').innerHTML += `
           <li class="list-group-item">
             <div class="media-body">
-              <span><a href="https://www.reddit.com/user/${element.author.name}">u/${element.author.name}</a> replied to your post in ${messageSource}</span>
-              <p>${element.body}</p>
+              <span>${messageAuthor} in ${messageSource}</span>
+              <p>${element.body_html}</p>
               <span>${moment.unix(element.created_utc).fromNow()}</span>
             </div>
           </li>
           `})
-      })
+        })
+      }
+      )
     }
-    
-
-    )
-  }
     document.querySelector('.footer-content').innerHTML = `Updated ${moment().format('MMMM Do YYYY, h:mm:ss a')}`;
 
   };
@@ -100,13 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const updateNotifications = () => {
+    myConsole.log(notifications);
     document.querySelector('.list-group').innerHTML = ``;
     loadMessages();
   }
 
   function toggleSettingsView() {
-
-
 
     if (document.querySelector('#login-overlay').style.display == 'none') {
       document.querySelector('#login-overlay').style.display = 'block';

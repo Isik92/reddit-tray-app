@@ -696,7 +696,7 @@ img {
 }
 .list-group * {
   margin: 0;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
