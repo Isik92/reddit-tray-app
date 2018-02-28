@@ -37,6 +37,8 @@ app.on('ready', () => {
     resizable: true,
   })
 
+  window.setMenu = null;
+
 
 
   // Tell the popup window to load our index.html file
