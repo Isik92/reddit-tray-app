@@ -1,0 +1,4 @@
+node_modules
+.DS_Store
+reddit-tray-app-darwin-x64
+yarn-error.log

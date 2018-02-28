@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Weather</title>
+  <link rel="stylesheet" href="./vendor/css/photon.css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="./index.css" media="screen" charset="utf-8">
+  <script charset="utf-8">require('./index')</script>
+</head>
+
+<body>
+  <div class="header-arrow"></div>
+  <div class="window">
+
+    <header class="toolbar toolbar-header">
+      <h1 class="title"> Reddit Tray App
+        <span class="js-update-time"></span>
+      </h1>
+    </header>
+
+    <div class="window-content">
+      <div class="pane">
+
+        <div id="login-overlay">
+          userAgent
+          <br>
+          <input id="useragent" type="text" name="useragent">
+
+          <br> clientId:
+          <br>
+          <input id="clientid" type="text" name="clientid">
+
+          <br> clientSecret:
+          <br>
+          <input id="clientsecret" type="text" name="clientsecret">
+
+          <br> username:
+          <br>
+          <input id="username" type="text" name="username">
+
+          <br> password:
+          <br>
+          <input id="password" type="text" name="password">
+          <br>
+          <br>
+          <span id="info"></span>
+          <br>
+          <br>
+          <input id="submitButton" type="submit" value="Save">
+          <br>
+          <p>Check test_login_details.rtf for easy testing or reddit_trayapp_docs.pdf if you want to use it with your own account.</p>
+
+        </div>
+
+        <ul class="list-group"></ul>
+
+      </div>
+    </div>
+
+    <footer class="toolbar toolbar-footer">
+
+      <div class="footer-content">
+        loading time...
+      </div>
+
+      <div class="toolbar-actions pull-right">
+        <div class="btn-group">
+
+          <button class="btn btn-default js-refresh-action">
+            <span class="icon icon-arrows-ccw js-refresh-action" title="Refresh"></span>
+          </button>
+
+          <button class="btn btn-default js-settings-action">
+            <span class="icon icon-cog js-settings-action" title="Settings"></span>
+          </button>
+
+        </div>
+      </div>
+
+    </footer>
+  </div>
+</body>
+
+</html>
